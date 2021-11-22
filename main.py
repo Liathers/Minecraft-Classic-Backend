@@ -14,42 +14,42 @@ def listmaps():
 @app.route("/level/save.html", methods=['POST'])
 def savelevel():
     username = None
-    sessionId = None
-    mapId = None
-    mapLength = None
-    mapName = None
+    session_id = None
+    map_id = None
+    map_length = None
+    map_name = None
 
     try:
-        requestData = request.stream.read()
+        request_data = request.stream.read()
 
-        username_length = int.from_bytes(requestData[1 : 2], byteorder='big')
-        username = requestData[2 : 2 + username_length]
-        sessionId_length = int.from_bytes(requestData[2 + username_length + 1 : 2 + username_length + 2], byteorder='big')
-        sessionId = requestData[2 + username_length + 2 : 2 + username_length + 2 + sessionId_length]
-        mapName_length = int.from_bytes(requestData[2 + username_length + 2 + sessionId_length + 1 : 2 + username_length + 2 + sessionId_length + 2], byteorder='big')
-        mapName = requestData[2 + username_length + 2 + sessionId_length + 2 : 2 + username_length + 2 + sessionId_length + 2 + mapName_length]
-        mapId = requestData[2 + username_length + 2 + sessionId_length + 2 + mapName_length]
-        mapLength = int.from_bytes(requestData[2 + username_length + 2 + sessionId_length + 2 + mapName_length + 1 : 2 + username_length + 2 + sessionId_length + 2 + mapName_length + 1 + 4], byteorder='big')
-        mapData = requestData[2 + username_length + 2 + sessionId_length + 2 + mapName_length + 1 + 4 : len(requestData)]
+        username_length = int.from_bytes(request_data[1 : 2], byteorder='big')
+        username = request_data[2 : 2 + username_length]
+        session_id_length = int.from_bytes(request_data[2 + username_length + 1 : 2 + username_length + 2], byteorder='big')
+        session_id = request_data[2 + username_length + 2 : 2 + username_length + 2 + session_id_length]
+        map_name_length = int.from_bytes(request_data[2 + username_length + 2 + session_id_length + 1 : 2 + username_length + 2 + session_id_length + 2], byteorder='big')
+        map_name = request_data[2 + username_length + 2 + session_id_length + 2 : 2 + username_length + 2 + session_id_length + 2 + map_name_length]
+        map_id = request_data[2 + username_length + 2 + session_id_length + 2 + map_name_length]
+        map_length = int.from_bytes(request_data[2 + username_length + 2 + session_id_length + 2 + map_name_length + 1 : 2 + username_length + 2 + session_id_length + 2 + map_name_length + 1 + 4], byteorder='big')
+        map_data = request_data[2 + username_length + 2 + session_id_length + 2 + map_name_length + 1 + 4 : len(request_data)]
 
         username = str(username, 'utf-8')
-        sessionId = str(sessionId, 'utf-8')
-        mapName = str(mapName, 'utf-8')
+        session_id = str(session_id, 'utf-8')
+        map_name = str(map_name, 'utf-8')
 
-        version = 2 if mapData[0:2] == bytes([0x1F, 0x8B]) else 1
+        version = 2 if map_data[0:2] == bytes([0x1F, 0x8B]) else 1
     except:
         return Response("Something went wrong!", 500)
 
     try:
-        mapJsonData = {
-            "name": mapName,
-            "length": mapLength,
-            "data": f"./maps/{username}_{mapId}.dat",
+        map_json_data = {
+            "name": map_name,
+            "length": map_length,
+            "data": f"./maps/{username}_{map_id}.dat",
             "createdAt": str(datetime.utcnow()),
             "version": version
         }
-        updateusermap(username, mapId, mapJsonData)
-        saveusermap(username, mapId, mapData)
+        updateusermap(username, map_id, map_json_data)
+        saveusermap(username, map_id, map_data)
     except:
         return Response("Failed to save data.", 500)
 
