@@ -1,4 +1,4 @@
 def register_routes(app):
-    from routes.legacy import register_routes as register_legacy_routes
+    from routes.classic import register_routes as register_classic_routes
 
-    register_legacy_routes(app)
+    register_classic_routes(app)

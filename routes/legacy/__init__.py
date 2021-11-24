@@ -1,1 +1,0 @@
-from routes.legacy.index import *
