@@ -8,7 +8,6 @@ import base64
 ''' Reguster skin routes '''
 def register_routes(app):
     @app.route('/skin/<username>.png')
-    @app.route('/MinecraftSkins/<username>.png')
     def skin(username):
         try:
             profile = json.loads(requests.get("https://api.mojang.com/users/profiles/minecraft/" + username).content)
